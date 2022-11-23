@@ -21,6 +21,25 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
+async function run(){
+    try{
+        const categoriesCollection = client
+          .db("resellWizards")
+          .collection("categories");
+        
+        // Get All Categories and Show on Home Page------------------->>>>>>>>>>>>>>>>
+        app.get("/categories", async(req, res)=>{
+            const query = {};
+            const result = await categoriesCollection.find(query).toArray();
+            res.send(result);
+        })
+
+    }
+    finally{
+
+    }
+}
+run().catch(e => console.log(e));
 
 
 
