@@ -32,6 +32,9 @@ async function run(){
 
         // All Bookings Are Stored Here------------->>>>>
         const bookingsCollection = client.db("resellWizards").collection("bookings");
+
+        // All Email and Social User's Data Stored Here---------------------->>>>>>
+        const usersCollection = client.db("resellWizards").collection("users");
         
 
 
@@ -60,6 +63,30 @@ async function run(){
             res.send(result); 
         })
 
+
+        // Admin Panel Works Here--------------------------------------->>>>>
+        
+        // Post User's Data From Sign Up Page----------------------->>>>>>>>>>>>
+        app.post("/users", async(req, res)=>{
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.send(result);
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     }
     finally{
 
