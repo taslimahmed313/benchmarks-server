@@ -89,6 +89,14 @@ async function run(){
           res.send({ isSeller: user?.role === "Seller" });
         });
 
+        // Buyer Conditional Rendering With Email Params--------------------->>>>>>>>
+        app.get("/users/buyer/:email", async(req, res)=>{
+            const email = req.params.email;
+            const query = {email};
+            const user = await usersCollection.findOne(query);
+            res.send({ isBuyer: user?.role === "Buyer" });
+        })
+
 
 
 
