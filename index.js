@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 
 const app = express();
@@ -37,6 +37,11 @@ async function run(){
 
       // All Email and Social User's Data Stored Here---------------------->>>>>>
       const usersCollection = client.db("resellWizards").collection("users");
+
+      // All Advertise Books Collection Store Here------------>>>>>>>>>>>
+      const advertisesCollection = client.db("resellWizards").collection("advertises");
+
+      
 
       // Get All Categories and Show on Home Page------------------->>>>>>>>>>>>>>>>
       app.get("/categories", async (req, res) => {
@@ -101,14 +106,47 @@ async function run(){
         res.send(result);
       });
 
+      // Display Books on My Products Components------------------->>>>>>>>>>>>>>>>>>>>>>>>
       app.get("/books", async(req, res)=>{
         const email = req.query.email;
-        console.log(email);
         const query = {email}
         const result = await booksCollection.find(query).toArray();
         res.send(result);
 
       })
+
+      // Deleting Book from My Products Components-------------------------->>>>>>>>>>>>>>>
+      app.delete("/books/:id", async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id: ObjectId(id)};
+        const result = await booksCollection.deleteOne(query);
+        res.send(result);
+      })
+
+      // Post Data to Advertise form My Products Component------------------------>>>>>>>>
+      app.post("/advertises", async(req, res)=>{
+        const advertise = req.body;
+        const result = await advertisesCollection.insertOne(advertise);
+        res.send(result);
+      });
+
+      // Display All Advertise Books on Home page--------------->>>>>>>>>>>>>>>>>>>>>>>>>>
+      app.get("/advertises", async(req, res)=>{
+        const query = {};
+        const result = await advertisesCollection.find(query).toArray();
+        res.send(result)
+      })
+
+
+      // Get All Buyers and Sellers
+      // app.get("/books", async(req, res)=>{
+      //   // const email = req.query.email;
+      //   // console.log(email);
+      //   const query = {role: "Seller"}
+      //   const result = await usersCollection.find(query).toArray();
+      //   res.send(result);
+
+      // })
 
 
 
