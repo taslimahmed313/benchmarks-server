@@ -38,11 +38,6 @@ async function run(){
       // All Email and Social User's Data Stored Here---------------------->>>>>>
       const usersCollection = client.db("resellWizards").collection("users");
 
-      // All Advertise Books Collection Store Here------------>>>>>>>>>>>
-      const advertisesCollection = client.db("resellWizards").collection("advertises");
-
-      
-
       // Get All Categories and Show on Home Page------------------->>>>>>>>>>>>>>>>
       app.get("/categories", async (req, res) => {
         const query = {};
@@ -107,62 +102,77 @@ async function run(){
       });
 
       // Display Books on My Products Components------------------->>>>>>>>>>>>>>>>>>>>>>>>
-      app.get("/books", async(req, res)=>{
+      app.get("/books", async (req, res) => {
         const email = req.query.email;
-        const query = {email}
+        const query = { email };
         const result = await booksCollection.find(query).toArray();
-        res.send(result);
-
-      })
-
-      // Deleting Book from My Products Components-------------------------->>>>>>>>>>>>>>>
-      app.delete("/books/:id", async(req, res)=>{
-        const id = req.params.id;
-        const query = {_id: ObjectId(id)};
-        const result = await booksCollection.deleteOne(query);
-        res.send(result);
-      })
-
-      // Post Data to Advertise form My Products Component------------------------>>>>>>>>
-      app.post("/advertises", async(req, res)=>{
-        const advertise = req.body;
-        const result = await advertisesCollection.insertOne(advertise);
         res.send(result);
       });
 
-      // Display All Advertise Books on Home page--------------->>>>>>>>>>>>>>>>>>>>>>>>>>
-      app.get("/advertises", async(req, res)=>{
-        const query = {};
-        const result = await advertisesCollection.find(query).toArray();
-        res.send(result)
-      })
+      // Deleting Book from My Products Components-------------------------->>>>>>>>>>>>>>>
+      app.delete("/books/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await booksCollection.deleteOne(query);
+        res.send(result);
+      });
 
+      // Updated Data to Advertise form My Products Component------------------------>>>>>>>>
+      app.put("/advertise/:id", async (req, res) => {
+        // const query = {};
+        // const result = await advertisesCollection.find(query).toArray();
+        // res.send(result)
+        const id = req.params.id;
+        const filter = { _id: ObjectId(id) };
+        const options = { upsert: true };
+        const updatedDoc = {
+          $set: {
+            advertise: "yes",
+          },
+        };
+        const result = await booksCollection.updateOne(
+          filter,
+          updatedDoc,
+          options
+        );
+        res.send(result);
+      });
 
-      // Get All Buyers and Sellers
-      // app.get("/books", async(req, res)=>{
-      //   // const email = req.query.email;
-      //   // console.log(email);
-      //   const query = {role: "Seller"}
-      //   const result = await usersCollection.find(query).toArray();
-      //   res.send(result);
+      app.get("/advertises", async (req, res) => {
+        const query = { advertise: "yes" };
+        const result = await booksCollection.find(query).toArray();
+        res.send(result);
+      });
 
-      // })
+      // Get All Sellers
+      app.get("/allSellers", async (req, res) => {
+        const query = { role: "Seller" };
+        const result = await usersCollection.find(query).toArray();
+        res.send(result);
+      });
 
+      // Delete Seller---------------------------------->>>>>>>>>>>>>>>>>>>>
+      app.delete("/allSellers/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await usersCollection.deleteOne(query);
+        res.send(result);
+      });
 
+      // Get All Buyers
+      app.get("/allBuyers", async (req, res) => {
+        const query = { role: "Buyer" };
+        const result = await usersCollection.find(query).toArray();
+        res.send(result);
+      });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+      // Delete Seller---------------------------------->>>>>>>>>>>>>>>>>>>>
+      app.delete("/allBuyers/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await usersCollection.deleteOne(query);
+        res.send(result);
+      });
 
 
     }
