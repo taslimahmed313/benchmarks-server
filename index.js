@@ -119,9 +119,6 @@ async function run(){
 
       // Updated Data to Advertise form My Products Component------------------------>>>>>>>>
       app.put("/advertise/:id", async (req, res) => {
-        // const query = {};
-        // const result = await advertisesCollection.find(query).toArray();
-        // res.send(result)
         const id = req.params.id;
         const filter = { _id: ObjectId(id) };
         const options = { upsert: true };
@@ -138,6 +135,7 @@ async function run(){
         res.send(result);
       });
 
+      // Display All Advertises Products in Home Page--------------------------->>>>>>>>>>>
       app.get("/advertises", async (req, res) => {
         const query = { advertise: "yes" };
         const result = await booksCollection.find(query).toArray();
@@ -173,6 +171,30 @@ async function run(){
         const result = await usersCollection.deleteOne(query);
         res.send(result);
       });
+
+      // Verified Seller--------------------------->>>>>>>>>
+      app.put("/verifySeller/:email", async(req, res)=>{
+        const email = req.params.email;
+        console.log(email);
+        const filter = {email};
+
+        const options = { upsert: true };
+        const updatedDoc = {
+          $set: {
+            verification: "verified seller",
+          },
+        };
+        const result = await booksCollection.updateOne(
+          filter,
+          updatedDoc,
+          options
+        );
+        res.send(result);
+
+      });
+
+
+
 
 
     }
