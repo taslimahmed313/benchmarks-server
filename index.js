@@ -200,7 +200,7 @@ async function run(){
         res.send({ isVerify: user?.verification === "verified" });
       });
 
-      // Reported Admin-------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>
+      //Put Reported Admin-------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>
       app.put("/reports/:id", async(req, res)=>{
         const id = req.params.id;
         const filter = {_id: ObjectId(id)};
@@ -213,6 +213,13 @@ async function run(){
         const result = await booksCollection.updateOne(filter, updatedDoc, option);
         res.send(result);
       });
+
+      // Get Reported Admin-------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      app.get("/reports", async(req, res)=>{
+        const query = {report: "reported"};
+        const result = await booksCollection.find(query).toArray();
+        res.send(result);
+      })
 
 
 
