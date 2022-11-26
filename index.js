@@ -181,16 +181,23 @@ async function run(){
         const options = { upsert: true };
         const updatedDoc = {
           $set: {
-            verification: "verified seller",
+            verification: "verified",
           },
         };
-        const result = await booksCollection.updateOne(
+        const result = await usersCollection.updateOne(
           filter,
           updatedDoc,
           options
         );
         res.send(result);
 
+      });
+
+      app.get("/verifySeller/:email", async (req, res) => {
+        const email = req.params.email;
+        const query = { email };
+        const user = await usersCollection.findOne(query);
+        res.send({ isVerify: user?.verification === "verified" });
       });
 
 
