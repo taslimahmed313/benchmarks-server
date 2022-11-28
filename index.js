@@ -68,6 +68,13 @@ async function run(){
         res.send(orders);
       })
 
+      app.get("/bookings/:id", async(req, res)=>{
+        const id = req.params.id;
+        const filter = {_id: ObjectId(id)};
+        const result = await bookingsCollection.findOne(filter);
+        res.send(result);
+      })
+
       // Admin Panel Works Here--------------------------------------->>>>>
 
       // Post User's Data From Sign Up Page----------------------->>>>>>>>>>>>
@@ -252,6 +259,19 @@ async function run(){
         const result = await booksCollection.deleteOne(query);
         res.send(result);
       })
+
+
+
+
+
+
+
+
+
+
+
+
+      // Payment---------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
 
