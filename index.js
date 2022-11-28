@@ -254,21 +254,6 @@ async function run(){
 }
 run().catch(e => console.log(e));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.get("/", (req, res)=>{
     res.send("Resell Wizards Server Is Running......................")
 })
@@ -276,3 +261,5 @@ app.get("/", (req, res)=>{
 app.listen(port, ()=>{
     console.log(`Available Port Is ${port}`)
 })
+
+module.exports = app;
