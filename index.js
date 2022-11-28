@@ -61,19 +61,19 @@ async function run(){
         res.send(result);
       });
 
-      app.get("/bookings", async(req, res)=>{
+      app.get("/bookings", async (req, res) => {
         const email = req.query.email;
-        const query = {email};
+        const query = { email };
         const orders = await bookingsCollection.find(query).toArray();
         res.send(orders);
-      })
+      });
 
-      app.get("/bookings/:id", async(req, res)=>{
+      app.get("/bookings/:id", async (req, res) => {
         const id = req.params.id;
-        const filter = {_id: ObjectId(id)};
+        const filter = { _id: ObjectId(id) };
         const result = await bookingsCollection.findOne(filter);
         res.send(result);
-      })
+      });
 
       // Admin Panel Works Here--------------------------------------->>>>>
 
@@ -148,6 +148,13 @@ async function run(){
         res.send(result);
       });
 
+      // Display All Advertises Products in Home Page--------------------------->>>>>>>>>>>
+      app.get("/advertises", async (req, res) => {
+        const query = { advertise: "yes" };
+        const result = await booksCollection.find(query).toArray();
+        res.send(result);
+      });
+
       // Updated Data to Advertise form My Products Component------------------------>>>>>>>>
       app.put("/advertise/:id", async (req, res) => {
         const id = req.params.id;
@@ -163,13 +170,6 @@ async function run(){
           updatedDoc,
           options
         );
-        res.send(result);
-      });
-
-      // Display All Advertises Products in Home Page--------------------------->>>>>>>>>>>
-      app.get("/advertises", async (req, res) => {
-        const query = { advertise: "yes" };
-        const result = await booksCollection.find(query).toArray();
         res.send(result);
       });
 
@@ -203,11 +203,19 @@ async function run(){
         res.send(result);
       });
 
+      // Get VerifySeller by Email Query---------------------->>>>>>>>>>>>>>
+      app.get("/verifySeller/:email", async (req, res) => {
+        const email = req.params.email;
+        const query = { email };
+        const user = await usersCollection.findOne(query);
+        res.send({ isVerify: user?.verification === "verified" });
+      });
+
       // Verified Seller--------------------------->>>>>>>>>
-      app.put("/verifySeller/:email", async(req, res)=>{
+      app.put("/verifySeller/:email", async (req, res) => {
         const email = req.params.email;
         console.log(email);
-        const filter = {email};
+        const filter = { email };
 
         const options = { upsert: true };
         const updatedDoc = {
@@ -221,62 +229,40 @@ async function run(){
           options
         );
         res.send(result);
-
-      });
-
-      app.get("/verifySeller/:email", async (req, res) => {
-        const email = req.params.email;
-        const query = { email };
-        const user = await usersCollection.findOne(query);
-        res.send({ isVerify: user?.verification === "verified" });
-      });
-
-      //Put Reported Admin-------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>
-      app.put("/reports/:id", async(req, res)=>{
-        const id = req.params.id;
-        const filter = {_id: ObjectId(id)};
-        const option = {upsert: true};
-        const updatedDoc = {
-          $set: {
-            report: "reported"
-          }
-        }
-        const result = await booksCollection.updateOne(filter, updatedDoc, option);
-        res.send(result);
       });
 
       // Get Reported Admin-------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-      app.get("/reports", async(req, res)=>{
-        const query = {report: "reported"};
+      app.get("/reports", async (req, res) => {
+        const query = { report: "reported" };
         const result = await booksCollection.find(query).toArray();
         res.send(result);
-      })
+      });
+
+      //Put Reported Admin-------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>
+      app.put("/reports/:id", async (req, res) => {
+        const id = req.params.id;
+        const filter = { _id: ObjectId(id) };
+        const option = { upsert: true };
+        const updatedDoc = {
+          $set: {
+            report: "reported",
+          },
+        };
+        const result = await booksCollection.updateOne(
+          filter,
+          updatedDoc,
+          option
+        );
+        res.send(result);
+      });
 
       // Delete Reported Product--------------->>>>>>>>>>>>>>>>>>>>>>
-      app.delete("/reports/:id", async(req, res)=>{
+      app.delete("/reports/:id", async (req, res) => {
         const id = req.params.id;
-        const query = {_id: ObjectId(id)};
+        const query = { _id: ObjectId(id) };
         const result = await booksCollection.deleteOne(query);
         res.send(result);
-      })
-
-
-
-
-
-
-
-
-
-
-
-
-      // Payment---------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-
-
-
+      });
     }
     finally{
 
