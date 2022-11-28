@@ -61,6 +61,13 @@ async function run(){
         res.send(result);
       });
 
+      app.get("/bookings", async(req, res)=>{
+        const email = req.query.email;
+        const query = {email};
+        const orders = await bookingsCollection.find(query).toArray();
+        res.send(orders);
+      })
+
       // Admin Panel Works Here--------------------------------------->>>>>
 
       // Post User's Data From Sign Up Page----------------------->>>>>>>>>>>>
@@ -69,6 +76,23 @@ async function run(){
         const result = await usersCollection.insertOne(user);
         res.send(result);
       });
+
+      // app.put("/users/:email", async(req, res)=>{
+      //   const email = req.params.email;
+      //   const user = req.body;
+      //   console.log(user)
+      //   const filter = {email};
+      //   const options = {upsert: true};
+      //   const updatedDoc = {
+      //     $set: {
+      //       email: user.email,
+      //       role: user.role,
+      //       name: user.name
+      //     }
+      //   }
+      //   const result = await usersCollection.updateOne(filter, updatedDoc,options);
+      //   res.send(result);
+      // })
 
       // Admin Conditional Rendering---------by Email Params------------>>>>>>>>>>>>>>>>
       app.get("/users/admin/:email", async (req, res) => {
